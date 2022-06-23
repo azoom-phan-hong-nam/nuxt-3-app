@@ -4,7 +4,7 @@
     <p>Double count: {{ doubleCount }}</p>
     <p>Name: {{ state.name }}</p>
     <p>Age: {{ state.age }}</p>
-    <input type="text" v-model="state.name" />
+    <app-input type="text" v-model="state.name" />
     <div class="random-image">
       <img
         v-for="image in state.images"
