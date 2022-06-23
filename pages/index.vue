@@ -1,35 +1,44 @@
 <template>
   <div>
     <p>Count: {{ count }}</p>
-    <p>Double count: {{ doubleCount }}</p>
+    <p ref="doubleCountElement">Double count: {{ doubleCount }}</p>
     <p>Name: {{ state.name }}</p>
     <p>Age: {{ state.age }}</p>
     <app-input type="text" v-model="state.name" />
+
+    <app-button @click="increaseCount">Increase</app-button>
+    <app-button @click="removeDoubleCountElement"
+      >Remove double count element</app-button
+    >
     <div class="random-image">
       <img
-        v-for="image in state.images"
+        v-for="image in images"
         width="300"
         class="image"
         :key="image.id"
         :src="image.download_url"
       />
     </div>
-
-    <app-button @click="increaseCount">Increase</app-button>
   </div>
 </template>
 
 <script lang="ts" setup>
-const count = ref(0);
-const state = reactive({
+import { Image } from "@/composables/use-random-image";
+interface People {
+  name: string;
+  age: number;
+}
+
+const count = ref<number>(0);
+const state = reactive<People>({
   name: "PHNam",
   age: 25,
-  images: [],
 });
-const doubleCount = computed(() => count.value * 2);
+const images = ref<Image[]>([]);
+const doubleCount = computed<number>(() => count.value * 2);
 
-useRandomImage(5).then((response) => {
-  state.images = response;
+useRandomImage(5).then((response: Image[]) => {
+  images.value = response;
 });
 
 watch(
@@ -39,9 +48,16 @@ watch(
   }
 );
 
-const increaseCount = () => {
+const increaseCount = (): void => {
   count.value += 1;
 };
+
+const doubleCountElement = ref<HTMLParagraphElement | null>(null);
+const removeDoubleCountElement = (): void => {
+  doubleCountElement.value?.remove();
+};
+
+onMounted(() => alert("mounted"));
 </script>
 
 <style>
